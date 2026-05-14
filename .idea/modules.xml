@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/genealogy/genealogy.iml" filepath="$PROJECT_DIR$/genealogy/genealogy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/genealogy1/genealogy1.iml" filepath="$PROJECT_DIR$/genealogy1/genealogy1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kolokwium 2020/kolokwium 2020.iml" filepath="$PROJECT_DIR$/kolokwium 2020/kolokwium 2020.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ooptest.iml" filepath="$PROJECT_DIR$/ooptest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/svgDecorate/svgDecorate.iml" filepath="$PROJECT_DIR$/svgDecorate/svgDecorate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test for kolokwium/test.iml" filepath="$PROJECT_DIR$/test for kolokwium/test.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,83 @@
+<svg width="500" height="400" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- фон -->
+    <rect width="100%" height="100%" fill="#f8f9fa" />
+
+    <!-- прямокутник -->
+    <rect x="20" y="20" width="100" height="60"
+          fill="skyblue" stroke="blue" />
+
+    <!-- текст -->
+    <text x="20" y="95"
+          font-size="12"
+          font-family="Arial">
+        Rect
+    </text>
+
+    <!-- коло -->
+    <circle cx="200" cy="50" r="40"
+            fill="salmon" />
+
+    <text x="180" y="105"
+          font-size="12"
+          font-family="Arial">
+        Circle
+    </text>
+
+    <!-- еліпс -->
+    <ellipse cx="370" cy="50"
+             rx="60" ry="30"
+             fill="lightgreen" />
+
+    <text x="345" y="95"
+          font-size="12"
+          font-family="Arial">
+        Ellipse
+    </text>
+
+    <!-- лінія -->
+    <line x1="20" y1="150"
+          x2="150" y2="150"
+          stroke="black"
+          stroke-width="3" />
+
+    <text x="20" y="170"
+          font-size="12"
+          font-family="Arial">
+        Line
+    </text>
+
+    <!-- polygon -->
+    <polygon points="250,120 210,190 290,190"
+             fill="gold"
+             stroke="orange" />
+
+    <text x="230" y="205"
+          font-size="12"
+          font-family="Arial">
+        Polygon
+    </text>
+
+    <!-- великий текст -->
+    <text x="20" y="250"
+          font-family="Verdana"
+          font-size="24"
+          fill="purple">
+        Java SVG School
+    </text>
+
+    <!-- прямокутник із заокругленням -->
+    <rect x="20" y="280"
+          width="120"
+          height="50"
+          rx="15"
+          fill="orange" />
+
+    <text x="35" y="310"
+          font-size="12"
+          fill="white"
+          font-family="Arial">
+        Rounded Rect
+    </text>
+
+</svg>
