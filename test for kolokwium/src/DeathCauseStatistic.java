@@ -6,7 +6,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DeathCauseStatistic {
+
     private String kodICD10;
+
+    /*
+     * int[]
+     * масив int.
+     */
     private int[] deathsByAgeGroup;
 
     public DeathCauseStatistic(String kodICD10, int[] deathsByAgeGroup) {
@@ -23,49 +29,112 @@ public class DeathCauseStatistic {
     }
 
     public static DeathCauseStatistic[] fromCsv(String path) throws IOException {
+
+        /*
+         * BufferedReader
+         * читання файлу по рядках.
+         */
         BufferedReader file = new BufferedReader(new FileReader(path));
+
         file.readLine();
         file.readLine();
+
         String line;
+
         List<DeathCauseStatistic> deathCauseStatistics = new ArrayList<>();
+
+        /*
+         * while
+         * працює поки рядок != null.
+         */
         while ((line = file.readLine()) != null) {
+
             DeathCauseStatistic test = DeathCauseStatistic.fromCsvLine(line);
+
             deathCauseStatistics.add(test);
         }
+
+        /*
+         * toArray()
+         * List -> array.
+         */
         return deathCauseStatistics.toArray(new DeathCauseStatistic[0]);
     }
-    //21
+
     public static DeathCauseStatistic fromCsvLine(String line){
+
+        /*
+         * split(",")
+         * ділить текст по комі.
+         */
         String[] fields = line.split(",");
+
         String kodICD10 = fields[0];
+
         int[] deathsByAgeGroup = new int[fields.length - 1];
+
+        /*
+         * for цикл
+         * проходить по індексах.
+         */
         for (int i = 1; i < fields.length; i++){
+
+            /*
+             * equals()
+             * порівняння тексту.
+             */
             if(!fields[i].equals("-")){
+
+                /*
+                 * parseInt()
+                 * String -> int
+                 */
                 deathsByAgeGroup[i-1]=Integer.parseInt(fields[i]);
+
             }else{
                 deathsByAgeGroup[i-1]=0;
             }
         }
+
         return new DeathCauseStatistic(kodICD10, deathsByAgeGroup);
     }
 
     @Override
     public String toString() {
+
+        /*
+         * Arrays.toString()
+         * масив -> текст.
+         */
         return "DeathCauseStatistic{" +
                 "kodICD10='" + kodICD10 + '\'' +
                 ", deathsByAgeGroup=" + Arrays.toString(deathsByAgeGroup) +
                 '}'+'\n';
     }
+
     public AgeBracketDeaths DeathCauseStatistic(int young ,int old) {
+
         int tmp=0;
+
         int[] deathsByAgeGroup1 = this.deathsByAgeGroup;
+
         for (int i = young / 5; i < old / 5; i++) {
             tmp += deathsByAgeGroup1[i+1];
-
         }
+
         return new AgeBracketDeaths(young,old,tmp);
     }
+
+    /*
+     * inner class
+     * внутрішній клас.
+     */
     public class AgeBracketDeaths{
+
+        /*
+         * final
+         * значення не змінюється.
+         */
         public final int young ;
         public final int old;
         public final int deathCount;
@@ -74,7 +143,6 @@ public class DeathCauseStatistic {
             this.young = young;
             this.old = old;
             this.deathCount = deathCount;
-
         }
 
         @Override
@@ -86,6 +154,4 @@ public class DeathCauseStatistic {
                     '}';
         }
     }
-    }
-
-
+}
