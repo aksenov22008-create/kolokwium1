@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AS/AS.iml" filepath="$PROJECT_DIR$/AS/AS.iml" />
       <module fileurl="file://$PROJECT_DIR$/genealogy/genealogy.iml" filepath="$PROJECT_DIR$/genealogy/genealogy.iml" />
       <module fileurl="file://$PROJECT_DIR$/genealogy1/genealogy1.iml" filepath="$PROJECT_DIR$/genealogy1/genealogy1.iml" />
       <module fileurl="file://$PROJECT_DIR$/kolokwium 2020/kolokwium 2020.iml" filepath="$PROJECT_DIR$/kolokwium 2020/kolokwium 2020.iml" />

@@ -1,0 +1,38 @@
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+//        // TODO: Zadanie 6 "Pliki, wyjątki"
+        List<Person> loaded = Person.fromCsv("family.csv");
+        Person.toBinaryFile("binary.data", loaded);
+        System.out.println("Loaded list");
+        List<Person> fromBinary = Person.fromBinaryFile("binary.data");
+        String uml = Person.listToPlantUml(fromBinary, (modify) -> {
+            return modify + " #yellow";
+        });
+
+        PlantUMLRunner.setJarPath("/home/student/Pobrane/plantuml-1.2026.2.jar");
+        PlantUMLRunner.generateUML(uml, "/home/student/Pobrane/", "output");
+
+
+        List<Person> filtered = Person.filterSubstring(fromBinary, "Kowal");
+        System.out.println("Osoby z 'Kowal':");
+        for (Person p : filtered) {
+            System.out.println(p);
+        }
+
+        List<Person> sorted = Person.sortedByBirth(filtered);
+        System.out.println("Posortowane po dacie urodzenia:");
+        for (Person p : sorted) {
+            System.out.println(p);
+        }
+
+        List<Person> sortedList = Person.sortedByDeathAndLongOfLive(fromBinary);
+        System.out.println("Posortowane po zyjacych i dlugosci zycia:");
+        for (Person p : sortedList) {
+            System.out.println(p);
+        }
+
+        System.out.println("Najstarsza osoba: " + Person.getOldPerson(fromBinary));
+    }
+}

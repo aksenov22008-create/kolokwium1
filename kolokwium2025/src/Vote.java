@@ -11,27 +11,33 @@ public class Vote {
         this.votesForCandidate = votesForCandidate;
         this.location = location;
     }
+
+    public Vote() {
+        this(new HashMap<>(), new ArrayList<>());
+    }
+
     public static Vote fromCsvLine(String line, List<Candidate> candidates){
         String[] fields = line.split(",");
         List<Location> loc=new  ArrayList<>();
         loc.add(new Location(fields[0],fields[1],fields[2]));
         Map<Candidate,Integer> cand=new HashMap<>();
 
-        for (int i = 0;
-             i < candidates.size();
-             i++) {
+        for (int i = 0; i < candidates.size(); i++) {
 
-            int votes =
-                    Integer.parseInt(
-                            fields[i + 3]
-                    );
+            int votes = Integer.parseInt(fields[i + 3]);
 
-            cand.put(
-                    candidates.get(i),
-                    votes
-            );
+            cand.put(candidates.get(i), votes);
         }
         return new Vote(cand,loc);
+    }
+    public Vote summirize(List<Vote> voteList){
+        Vote vote = new  Vote();
+        vote.location=null;
+        for(Vote v:voteList){
+            for(Map.Entry<Candidate,Integer> e:v.votesForCandidate.entrySet()){
+
+            }
+        }
     }
     public static class Location{
         private String wojewodztwo;
