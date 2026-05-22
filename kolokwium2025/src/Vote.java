@@ -1,66 +1,230 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Vote {
-    private Map<Candidate,Integer> votesForCandidate=new HashMap<>();
-    private List<Location> location = new ArrayList<>();
 
-    public Vote(Map<Candidate, Integer> votesForCandidate, List<Location> location) {
-        this.votesForCandidate = votesForCandidate;
-        this.location = location;
-    }
+    // Кандидат -> голоси
+    private Map<Candidate,Integer>
+            votesForCandidate =
+            new HashMap<>();
 
-    public Vote() {
-        this(new HashMap<>(), new ArrayList<>());
-    }
+    // Воєводство, повіт, гміна
+    private List<String> location =
+            new ArrayList<>();
 
-    public static Vote fromCsvLine(String line, List<Candidate> candidates){
-        String[] fields = line.split(",");
-        List<Location> loc=new  ArrayList<>();
-        loc.add(new Location(fields[0],fields[1],fields[2]));
-        Map<Candidate,Integer> cand=new HashMap<>();
+    // Кеш суми
+    private Integer totalVotes =
+            null;
 
-        for (int i = 0; i < candidates.size(); i++) {
 
-            int votes = Integer.parseInt(fields[i + 3]);
+    // Створення Vote з csv
+    public static Vote fromCsvLine(
+            String line,
+            List<Candidate> candidates){
 
-            cand.put(candidates.get(i), votes);
+        Vote vote =
+                new Vote();
+
+        String[] data =
+                line.split(",");
+
+
+        // Додаємо місце
+        vote.location.add(data[0]);
+        vote.location.add(data[1]);
+        vote.location.add(data[2]);
+
+
+        // Додаємо голоси
+        for(int i=0;
+            i<candidates.size();
+            i++){
+
+            Candidate candidate =
+                    candidates.get(i);
+
+            int votes =
+                    Integer.parseInt(
+                            data[i+3]
+                    );
+
+            vote.votesForCandidate.put(
+                    candidate,
+                    votes
+            );
         }
-        return new Vote(cand,loc);
-    }
-    public Vote summirize(List<Vote> voteList){
-        Vote vote = new  Vote();
-        vote.location=null;
-        for(Vote v:voteList){
-            for(Map.Entry<Candidate,Integer> e:v.votesForCandidate.entrySet()){
 
+        return vote;
+    }
+
+
+    // Голоси кандидата
+    public int votes(
+            Candidate candidate){
+
+        return votesForCandidate
+                .getOrDefault(
+                        candidate,
+                        0
+                );
+    }
+
+
+    // Загальна сума
+    private int totalVotes(){
+
+        if(totalVotes==null){
+
+            totalVotes=0;
+
+            for(Integer value :
+                    votesForCandidate.values()){
+
+                totalVotes+=value;
             }
         }
+
+        return totalVotes;
     }
-    public static class Location{
-        private String wojewodztwo;
-        private String powiat;
-        private String gminy;
 
-        public Location(String wojewodztwo, String powiat, String gminy) {
-            this.wojewodztwo = wojewodztwo;
-            this.powiat = powiat;
-            this.gminy = gminy;
+
+    // Відсоток кандидата
+    public double percentage(
+            Candidate candidate){
+
+        return votes(candidate)
+                *100.0
+                /totalVotes();
+    }
+
+
+    // Сумарний результат
+    public static Vote summarize(
+            List<Vote> voteList){
+
+        return summarize(
+                voteList,
+                new ArrayList<>()
+        );
+    }
+
+
+    // Сумарний результат з локацією
+    public static Vote summarize(
+            List<Vote> voteList,
+            List<String> location){
+
+        Vote summary =
+                new Vote();
+
+        summary.location =
+                location;
+
+        if(voteList.isEmpty()){
+
+            return summary;
         }
 
-        public String getWojewodztwo() {
-            return wojewodztwo;
+        Set<Candidate> candidates =
+                voteList
+                        .get(0)
+                        .votesForCandidate
+                        .keySet();
+
+        for(Candidate candidate :
+                candidates){
+
+            int sum=0;
+
+            for(Vote vote :
+                    voteList){
+
+                sum+=vote.votes(
+                        candidate
+                );
+            }
+
+            summary.votesForCandidate
+                    .put(
+                            candidate,
+                            sum
+                    );
         }
 
-        public String getPowiat() {
-            return powiat;
+        return summary;
+    }
+
+
+    // Фільтр по місцю
+    public static List<Vote>
+    filterByLocation(
+            List<Vote> votes,
+            List<String> location){
+
+        List<Vote> result =
+                new ArrayList<>();
+
+
+        for(Vote vote : votes){
+
+            boolean ok=true;
+
+            for(int i=0;
+                i<location.size();
+                i++){
+
+                if(!vote.location
+                        .get(i)
+                        .equals(
+                                location.get(i)
+                        )){
+
+                    ok=false;
+                }
+            }
+
+            if(ok){
+
+                result.add(vote);
+            }
+
         }
 
-        public String getGminy() {
-            return gminy;
+        return result;
+    }
+
+
+    public Map<Candidate,Integer>
+    getVotesForCandidate(){
+
+        return votesForCandidate;
+    }
+
+
+    @Override
+    public String toString(){
+
+        String result="";
+
+        for(Candidate candidate :
+                votesForCandidate.keySet()){
+
+            result +=
+                    candidate.name();
+
+            result += " ";
+
+            result +=
+                    String.format(
+                            "%.2f",
+                            percentage(
+                                    candidate
+                            )
+                    );
+
+            result += "%\n";
         }
+
+        return result;
     }
 
 }

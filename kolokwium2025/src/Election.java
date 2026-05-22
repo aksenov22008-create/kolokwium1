@@ -1,42 +1,146 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 public class Election {
-    private Candidate[] candidates;
-    private static ElectionTurn firstTurn;
-    private ElectionTurn secondTurn;
+
+    // Список кандидатів
+    private List<Candidate>
+            candidates =
+            new ArrayList<>();
+
+    // Перша тура
+    private ElectionTurn
+            firstTurn =
+            new ElectionTurn(
+                    candidates
+            );
+
+    // Друга тура
+    private ElectionTurn
+            secondTurn;
+
+    // Переможець
+    private Candidate winner;
 
 
-    public Election(Candidate[] candidates) {
+    // Повернути копію списку
+    public List<Candidate>
+    getCandidates(){
 
-        this.candidates = candidates;
-
-        // створення першої тури
-        this.firstTurn =
-                new ElectionTurn(Arrays.asList(candidates));
-
-        // друга тура поки null
-        this.secondTurn = null;
+        return new ArrayList<>(
+                candidates
+        );
     }
 
-    public List<Candidate> copyCandidateList() {
-        List<Candidate> candidateList = Arrays.asList(candidates);
-        return candidateList;
-    }
-    public static List<Candidate> populateCandidates(String path) throws IOException {
-        List<Candidate> candidateList = new ArrayList<>();
-        firstTurn.populate("1(2025).csv");
-        BufferedReader reader = new BufferedReader(new FileReader(path));
+
+    // Завантажити кандидатів
+    public void populateCandidates(
+            String path)
+            throws Exception{
+
+        BufferedReader reader =
+                new BufferedReader(
+                        new FileReader(path)
+                );
+
         String line;
-        while((line = reader.readLine())!=null){
-            candidateList.add(new Candidate(line));
+
+        while(
+                (line=
+                        reader.readLine())
+                        !=null
+        ){
+
+            Candidate candidate =
+                    new Candidate(
+                            line
+                    );
+
+            candidates.add(
+                    candidate
+            );
         }
-        return candidateList;
+
+        reader.close();
     }
+
+
+    // Завантаження всіх даних
+    public void populate(
+            String candidateFile,
+            String firstFile,
+            String secondFile)
+            throws Exception{
+
+        // Завантажуємо кандидатів
+        populateCandidates(
+                candidateFile
+        );
+
+        // Завантажуємо першу туру
+        firstTurn.populate(
+                firstFile
+        );
+
+
+        try{
+
+            // Пробуємо знайти переможця
+            winner =
+                    firstTurn
+                            .winner();
+
+        }
+
+        catch(
+                NoWinnerException e){
+
+            // Отримуємо двох кандидатів
+            List<Candidate>
+                    finalists =
+
+                    firstTurn
+                            .runoffCandidates();
+
+
+            // Створюємо другу туру
+            secondTurn =
+                    new ElectionTurn(
+                            finalists
+                    );
+
+            // Завантажуємо результати
+            secondTurn.populate(
+                    secondFile
+            );
+
+            // Знаходимо переможця
+            winner =
+                    secondTurn
+                            .winner();
+        }
+
+    }
+
+
+    public Candidate
+    getWinner(){
+
+        return winner;
+    }
+
+
+    public ElectionTurn
+    getFirstTurn(){
+
+        return firstTurn;
+    }
+
+
+    public ElectionTurn
+    getSecondTurn(){
+
+        return secondTurn;
+    }
+
 }
